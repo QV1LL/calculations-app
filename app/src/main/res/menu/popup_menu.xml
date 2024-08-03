@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="7-A"
+        android:id="@+id/reservoir_a"/>
+    <item
+        android:title="7-Б"
+        android:id="@+id/reservoir_b"/>
+    <item
+        android:title="7-В"
+        android:id="@+id/reservoir_c"/>
+</menu>
