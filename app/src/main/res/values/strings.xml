@@ -10,5 +10,8 @@
     <string name="counter15">15,0</string>
     <string name="counter20">20,0</string>
     <string name="tons">Тонни</string>
-    <string name="reception">Прийн.</string>
+    <string name="reception">Прийнято</string>
+    <string name="together">Разом</string>
+    <string name="difference">Різниця</string>
+    <string name="percents">%</string>
 </resources>
