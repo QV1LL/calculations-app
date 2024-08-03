@@ -47,14 +47,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupPopupMenu() {
         Button popupMenuButton = (Button) findViewById(R.id.popup_menu_button);
-        popupMenuButton.setOnLongClickListener(new View.OnLongClickListener() {
+        popupMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View view) {
+            public void onClick(View view) {
                 PopupMenu popupMenu = new PopupMenu(MainActivity.this, view);
                 popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
-                popupMenu.show();
 
-                return false;
+
+
+                popupMenu.show();
             }
         });
     }

@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">Calculations</string>
+    <string name="app_name">Oil calculations</string>
+    <string name="start">Початок</string>
+    <string name="end">Кінець</string>
+    <string name="level">Рівень</string>
+    <string name="volume">Загал.</string>
+    <string name="volume_of_water">Вода</string>
+    <string name="volume_without_water">д/п,м3</string>
+    <string name="density">Густина</string>
+    <string name="counter15">15,0</string>
+    <string name="counter20">20,0</string>
+    <string name="tons">Тонни</string>
+    <string name="reception">Прийн.</string>
 </resources>
