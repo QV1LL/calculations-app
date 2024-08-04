@@ -3,11 +3,14 @@
 
     <item
         android:title="7-A"
-        android:id="@+id/reservoir_a"/>
+        android:id="@+id/reservoir1"/>
     <item
         android:title="7-Б"
-        android:id="@+id/reservoir_b"/>
+        android:id="@+id/reservoir2"/>
     <item
         android:title="7-В"
-        android:id="@+id/reservoir_c"/>
+        android:id="@+id/reservoir3"/>
+    <item
+        android:title="7-Г"
+        android:id="@+id/reservoir4"/>
 </menu>
