@@ -14,4 +14,7 @@
     <string name="together">Разом</string>
     <string name="difference">Різниця</string>
     <string name="percents">%</string>
+    <string name="startCounter">Лічильник початковий</string>
+    <string name="endCounter">Лічильник кінцевий</string>
+    <string name="buttonReset">Скинути</string>
 </resources>

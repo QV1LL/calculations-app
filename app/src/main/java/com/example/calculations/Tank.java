@@ -2,7 +2,7 @@ package com.example.calculations;
 
 public class Tank {
 
-    public String name = "undefined";
+    public String name = "резервуар";
 
     public float startLevel = 0;
     public float endLevel = 0;
@@ -31,7 +31,12 @@ public class Tank {
     public float startTons;
     public float endTons;
     public float reception;
+
     public static float together;
+
+    public static float startCounter = 0;
+    public static float endCounter = 0;
+
     public static float difference;
 
     public void setupInstances() {
@@ -42,5 +47,31 @@ public class Tank {
         this.endTons = this.endVolumeWithoutWater * this.endFreeDensityCounterValue / 1000;
 
         this.reception = this.endTons - this.startTons;
+    }
+
+    public void resetInstances() {
+        this.startLevel = 0;
+        this.endLevel = 0;
+
+        this.startVolume = 0;
+        this.endVolume = 0;
+
+        this.startWater = 0;
+        this.endWater = 0;
+
+        this.startFreeDensityCounter = 0;
+        this.startFreeDensityCounterValue = 0;
+
+        this.endFreeDensityCounter = 0;
+        this.endFreeDensityCounterValue = 0;
+
+        this.start15DensityCounterValue = 0;
+        this.end15DensityCounterValue = 0;
+
+        this.start20DensityCounterValue = 0;
+        this.end20DensityCounterValue = 0;
+
+        startCounter = 0;
+        endCounter = 0;
     }
 }

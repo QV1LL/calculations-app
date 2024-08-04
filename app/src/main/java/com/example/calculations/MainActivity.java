@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Tank> savedTanks = new ArrayList<Tank>();
 
     private static int currentTankIndex = 0;
+    private boolean isResetInstances = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,21 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setupPopupMenu();
+        setupResetButton();
+    }
+
+    private void setupResetButton() {
+        Button resetButton = (Button) findViewById(R.id.resetButton);
+
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!tanks.isEmpty()) {
+                    tanks.get(currentTankIndex).resetInstances();
+                    setupText();
+                }
+            }
+        });
     }
 
     private void setupPopupMenu() {
@@ -92,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupTank() {
-        tanks.get(currentTankIndex).name = (((EditText) findViewById(R.id.reservoirName)).getText().toString().isEmpty()) ? "undefined" : ((EditText) findViewById(R.id.reservoirName)).getText().toString();
+        tanks.get(currentTankIndex).name = (((EditText) findViewById(R.id.reservoirName)).getText().toString().isEmpty()) ? "резервуар" : ((EditText) findViewById(R.id.reservoirName)).getText().toString();
 
         tanks.get(currentTankIndex).startLevel = Float.valueOf((((TextView) findViewById(R.id.startLevel)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.startLevel)).getText().toString());
         tanks.get(currentTankIndex).endLevel = Float.valueOf((((TextView) findViewById(R.id.endLevel)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.endLevel)).getText().toString());
