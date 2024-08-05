@@ -2,7 +2,8 @@ package com.example.calculations;
 
 public class Tank {
 
-    public String name = "резервуар";
+    public String name;
+    private static String defaultName = "резервуар";
 
     public float startLevel = 0;
     public float endLevel = 0;
@@ -37,7 +38,9 @@ public class Tank {
     public static float startCounter = 0;
     public static float endCounter = 0;
 
-    public static float difference;
+    public Tank() {
+        this.name = defaultName;
+    }
 
     public void setupInstances() {
         this.startVolumeWithoutWater = this.startVolume - this.startWater;
@@ -50,6 +53,8 @@ public class Tank {
     }
 
     public void resetInstances() {
+        this.name = defaultName;
+
         this.startLevel = 0;
         this.endLevel = 0;
 

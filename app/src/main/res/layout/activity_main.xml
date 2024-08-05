@@ -45,13 +45,15 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:isScrollContainer="true"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -68,12 +70,11 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
                 android:background="@color/secondColor"
-                android:padding="5dp">
+                android:orientation="horizontal"
+                android:padding="1dp">
 
-                <TextView
-                    android:layout_weight="1" />
+                <TextView android:layout_weight="1" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -81,7 +82,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/start"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -89,7 +90,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/end"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
             </TableRow>
 
@@ -97,15 +98,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/secondColor"
-                android:padding="5dp">
+                android:padding="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:text="@string/level"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/startLevel"
@@ -131,15 +132,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/secondColor"
-                android:padding="5dp">
+                android:padding="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:text="@string/volume"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/startVolume"
@@ -163,15 +164,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/secondColor"
-                android:padding="5dp">
+                android:padding="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:text="@string/volume_of_water"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/startWaterVolume"
@@ -195,15 +196,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/secondColor"
-                android:padding="5dp">
+                android:padding="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:text="@string/volume_without_water"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/startVolumeWithoutWater"
@@ -228,9 +229,9 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
                 android:background="@color/secondColor"
-                android:padding="5dp"
-                android:layout_marginTop="10dp">
+                android:padding="1dp">
 
                 <TextView
                     android:id="@+id/density"
@@ -239,7 +240,7 @@
                     android:ems="10"
                     android:gravity="center"
                     android:text="@string/density"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
             </TableRow>
 
@@ -247,18 +248,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/secondColor"
-                android:padding="5dp">
+                android:padding="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center"/>
+                    android:gravity="center" />
 
                 <TableRow
                     android:layout_width="66dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
 
                     <EditText
                         android:id="@+id/startFreeDensityCounter"
@@ -280,8 +281,8 @@
 
                 <TableRow
                     android:layout_width="66dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
 
                     <EditText
                         android:id="@+id/endFreeDensityCounter"
@@ -302,25 +303,24 @@
                 </TableRow>
 
 
-
             </TableRow>
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/secondColor"
-                android:padding="5dp">
+                android:padding="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center"/>
+                    android:gravity="center" />
 
                 <TableRow
                     android:layout_width="66dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
 
                     <TextView
                         android:layout_height="match_parent"
@@ -342,8 +342,8 @@
 
                 <TableRow
                     android:layout_width="66dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
 
                     <TextView
                         android:layout_height="match_parent"
@@ -369,18 +369,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/secondColor"
-                android:padding="5dp">
+                android:padding="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center"/>
+                    android:gravity="center" />
 
                 <TableRow
                     android:layout_width="66dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
 
                     <TextView
                         android:layout_height="match_parent"
@@ -402,8 +402,8 @@
 
                 <TableRow
                     android:layout_width="66dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
 
                     <TextView
                         android:layout_height="match_parent"
@@ -428,18 +428,18 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
                 android:layout_marginTop="10dp"
                 android:background="@color/secondColor"
-                android:padding="5dp">
+                android:orientation="horizontal"
+                android:padding="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:text="@string/tons"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/startTons"
@@ -462,24 +462,24 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
                 android:background="@color/secondColor"
-                android:padding="5dp">
+                android:orientation="horizontal"
+                android:padding="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:text="@string/reception"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/reception"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:gravity="right"
                     android:textSize="20sp" />
 
             </TableRow>
@@ -487,43 +487,18 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_marginTop="25dp"
                 android:background="@color/secondColor"
-                android:padding="5dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/together"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/together"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textSize="20sp" />
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:background="@color/secondColor"
-                android:padding="5dp">
+                android:layout_marginTop="20dp"
+                android:padding="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/startCounter"
-                    android:textSize="20sp" />
+                    android:gravity="left"
+                    android:text="@string/counter"
+                    android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/startCounter"
@@ -531,24 +506,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textSize="20sp"
-                    android:inputType="numberDecimal"/>
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:background="@color/secondColor"
-                android:padding="5dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/endCounter"
+                    android:inputType="numberDecimal"
                     android:textSize="20sp" />
 
                 <EditText
@@ -557,32 +515,84 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textSize="20sp"
-                    android:inputType="numberDecimal"/>
+                    android:inputType="numberDecimal"
+                    android:textSize="20sp" />
+
+            </TableRow>
+
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/secondColor"
+                android:orientation="horizontal"
+                android:padding="1dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:text="@string/receptionByCounter"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/receptionByCounter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:textSize="20sp" />
+
+                </TableRow>
+
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/secondColor"
+                android:orientation="horizontal"
+                android:padding="1dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:text="@string/together"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/together"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:textSize="20sp" />
 
             </TableRow>
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
                 android:background="@color/secondColor"
-                android:padding="5dp">
+                android:orientation="horizontal"
+                android:padding="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:text="@string/difference"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/difference"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:gravity="right"
                     android:textSize="20sp" />
 
             </TableRow>
@@ -590,28 +600,85 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
                 android:background="@color/secondColor"
-                android:padding="5dp">
+                android:orientation="horizontal"
+                android:padding="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:text="@string/percents"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/percents"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:gravity="right"
                     android:textSize="20sp" />
 
             </TableRow>
 
+            <TableRow
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <EditText
+                    android:id="@+id/otherText1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:inputType="text"
+                    android:textSize="20sp" />
+
+
+            </TableRow>
+
+            <TableRow
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <EditText
+                    android:id="@+id/otherText2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:inputType="text"
+                    android:textSize="20sp" />
+
+
+            </TableRow>
+
+            <TableRow
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <EditText
+                    android:id="@+id/otherText3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:inputType="text"
+                    android:textSize="20sp" />
+
+
+            </TableRow>
+
         </TableLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

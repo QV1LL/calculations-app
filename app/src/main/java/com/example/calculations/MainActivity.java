@@ -37,6 +37,13 @@ public class MainActivity extends AppCompatActivity {
     private boolean isResetInstances = false;
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+
+        savedInstanceState.putAll(savedInstanceState);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
@@ -130,6 +137,16 @@ public class MainActivity extends AppCompatActivity {
 
         tanks.get(currentTankIndex).start20DensityCounterValue = Float.valueOf((((TextView) findViewById(R.id.start20DensityCounterValue)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.start20DensityCounterValue)).getText().toString());
         tanks.get(currentTankIndex).end20DensityCounterValue = Float.valueOf((((TextView) findViewById(R.id.end20DensityCounterValue)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.end20DensityCounterValue)).getText().toString());
+
+        Tank.startCounter = Float.valueOf((((TextView) findViewById(R.id.startCounter)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.startCounter)).getText().toString());
+        Tank.endCounter = Float.valueOf((((TextView) findViewById(R.id.endCounter)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.endCounter)).getText().toString());
+
+        float result = 0;
+
+        for(Tank tank : tanks)
+            result += tank.reception;
+
+        Tank.together = result;
     }
 
     private void setupText() {
@@ -166,5 +183,15 @@ public class MainActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.endTons)).setText(String.format("%.3f", tanks.get(currentTankIndex).endTons));
 
         ((TextView) findViewById(R.id.reception)).setText(String.format("%.3f", tanks.get(currentTankIndex).reception));
+
+        ((EditText) findViewById(R.id.startCounter)).setText(String.valueOf(Tank.startCounter));
+        ((EditText) findViewById(R.id.endCounter)).setText(String.valueOf(Tank.endCounter));
+
+        ((TextView)findViewById(R.id.receptionByCounter)).setText(String.format("%.3f", Tank.endCounter - Tank.startCounter));
+        ((TextView)findViewById(R.id.together)).setText(String.format("%.3f", Tank.together));
+
+        ((TextView)findViewById(R.id.difference)).setText(String.format("%.3f", Tank.together - (Tank.endCounter - Tank.startCounter)));
+
+        ((TextView)findViewById(R.id.percents)).setText(String.format("%.2f", (Tank.together - (Tank.endCounter - Tank.startCounter)) / (Tank.endCounter - Tank.startCounter) * 100) + "%");
     }
 }
