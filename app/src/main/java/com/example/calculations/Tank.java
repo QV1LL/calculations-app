@@ -1,42 +1,46 @@
 package com.example.calculations;
 
-public class Tank {
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+public class Tank implements Serializable {
 
     public String name;
     private static String defaultName = "резервуар";
 
-    public float startLevel = 0;
-    public float endLevel = 0;
+    public double startLevel = 0;
+    public double endLevel = 0;
 
-    public float startVolume = 0;
-    public float endVolume = 0;
+    public double startVolume = 0;
+    public double endVolume = 0;
 
-    public float startWater = 0;
-    public float endWater = 0;
+    public double startWater = 0;
+    public double endWater = 0;
 
-    public float startVolumeWithoutWater;
-    public float endVolumeWithoutWater;
+    public double startVolumeWithoutWater;
+    public double endVolumeWithoutWater;
 
-    public float startFreeDensityCounter = 0;
-    public float startFreeDensityCounterValue = 0;
+    public double startFreeDensityCounter = 0;
+    public double startFreeDensityCounterValue = 0;
 
-    public float endFreeDensityCounter = 0;
-    public float endFreeDensityCounterValue = 0;
+    public double endFreeDensityCounter = 0;
+    public double endFreeDensityCounterValue = 0;
 
-    public float start15DensityCounterValue = 0;
-    public float end15DensityCounterValue = 0;
+    public double start15DensityCounterValue = 0;
+    public double end15DensityCounterValue = 0;
 
-    public float start20DensityCounterValue = 0;
-    public float end20DensityCounterValue = 0;
+    public double start20DensityCounterValue = 0;
+    public double end20DensityCounterValue = 0;
 
-    public float startTons;
-    public float endTons;
-    public float reception;
+    public double startTons;
+    public double endTons;
+    public double reception;
 
-    public static float together;
+    public static double together;
 
-    public static float startCounter = 0;
-    public static float endCounter = 0;
+    public static double startCounter = 0;
+    public static double endCounter = 0;
 
     public Tank() {
         this.name = defaultName;

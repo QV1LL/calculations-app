@@ -22,25 +22,37 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
 
     private static String mainTag = "technical";
 
     private ArrayList<Tank> tanks = new ArrayList<Tank>();
+    private int tankCount = 4;
+
     private ArrayList<MenuItem> popupMenuItems = new ArrayList<MenuItem>();
 
     private ArrayList<Tank> savedTanks = new ArrayList<Tank>();
 
     private static int currentTankIndex = 0;
-    private boolean isResetInstances = false;
+    private boolean isLoadedData = false;
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
 
-        savedInstanceState.putAll(savedInstanceState);
+        for(int i = 0; i < tanks.size(); i++) {
+            String key = "tank" + String.valueOf(i);
+
+            savedInstanceState.putSerializable(key, tanks.get(i));
+        }
     }
 
     @Override
@@ -53,6 +65,18 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        if (savedInstanceState != null)
+            for(int i = 0; i < tankCount; i++) {
+                String key = "tank" + String.valueOf(i);
+                Tank tank = (Tank) savedInstanceState.getSerializable(key);
+
+                tanks.add(tank);
+            }
+
+        isLoadedData = (tanks.size() != 0);
+
+        updateTimer();
 
         setupPopupMenu();
         setupResetButton();
@@ -87,8 +111,12 @@ public class MainActivity extends AppCompatActivity {
 
                 for(int i = 0; i < popupMenuMenu.size(); i++) {
                     popupMenuItems.add(popupMenuMenu.getItem(i));
-                    tanks.add(new Tank());
                 }
+
+                if (!isLoadedData)
+                    for(int i = 0; i < popupMenuMenu.size(); i++) {
+                        tanks.add(new Tank());
+                    }
 
                 setupTank();
                 tanks.get(currentTankIndex).setupInstances();
@@ -100,8 +128,6 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         int itemIndex = popupMenuItems.indexOf(menuItem);
                         currentTankIndex = itemIndex;
-
-                        Log.i(mainTag, "" + tanks.get(currentTankIndex).startLevel);
 
                         setupText();
 
@@ -180,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
         ((EditText) findViewById(R.id.end20DensityCounterValue)).setText(String.valueOf(tanks.get(currentTankIndex).end20DensityCounterValue));
 
         ((TextView) findViewById(R.id.startTons)).setText(String.format("%.3f", tanks.get(currentTankIndex).startTons));
+
         ((TextView) findViewById(R.id.endTons)).setText(String.format("%.3f", tanks.get(currentTankIndex).endTons));
 
         ((TextView) findViewById(R.id.reception)).setText(String.format("%.3f", tanks.get(currentTankIndex).reception));
@@ -193,5 +220,14 @@ public class MainActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.difference)).setText(String.format("%.3f", Tank.together - (Tank.endCounter - Tank.startCounter)));
 
         ((TextView)findViewById(R.id.percents)).setText(String.format("%.2f", (Tank.together - (Tank.endCounter - Tank.startCounter)) / (Tank.endCounter - Tank.startCounter) * 100) + "%");
+    }
+
+    private void updateTimer() {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("dd MM yyyy HH:mm");
+        Date currentTime = new Date();
+
+        String result = timeFormat.format(currentTime);
+
+        ((TextView) findViewById(R.id.currentData)).setText(result);
     }
 }
