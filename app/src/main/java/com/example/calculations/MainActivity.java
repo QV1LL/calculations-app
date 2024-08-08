@@ -1,16 +1,12 @@
 package com.example.calculations;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
@@ -23,12 +19,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
+import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,22 +32,11 @@ public class MainActivity extends AppCompatActivity {
     private int tankCount = 4;
 
     private ArrayList<MenuItem> popupMenuItems = new ArrayList<MenuItem>();
-
     private ArrayList<Tank> savedTanks = new ArrayList<Tank>();
 
+    private Gson gson;
+
     private static int currentTankIndex = 0;
-    private boolean isLoadedData = false;
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-
-        for(int i = 0; i < tanks.size(); i++) {
-            String key = "tank" + String.valueOf(i);
-
-            savedInstanceState.putSerializable(key, tanks.get(i));
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,20 +49,97 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        if (savedInstanceState != null)
-            for(int i = 0; i < tankCount; i++) {
-                String key = "tank" + String.valueOf(i);
-                Tank tank = (Tank) savedInstanceState.getSerializable(key);
-
-                tanks.add(tank);
-            }
-
-        isLoadedData = (tanks.size() != 0);
+        gson = new Gson();
 
         updateTimer();
+        loadData();
+
+        if(tanks.size() == 0) {
+            Log.i(mainTag, "Creating new tanks...");
+
+            for(int i = 0; i < tankCount; i++) {
+                tanks.add(new Tank());
+            }
+        }
 
         setupPopupMenu();
         setupResetButton();
+    }
+
+    private void saveData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("savePreference", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        for(int i = 0; i < tankCount; i++) {
+            String tankGson = gson.toJson(tanks.get(i));
+
+            editor.putString("tank" + i, tankGson);
+
+            Log.i(mainTag, "Saved tank name: " + tanks.get(i).name);
+        }
+
+        editor.putString("startCounter", String.format(Locale.ROOT, "%.3f", Tank.startCounter));
+        editor.putString("endCounter", String.format(Locale.ROOT, "%.3f", Tank.endCounter));
+
+        editor.putString("other1", ((TextView) findViewById(R.id.otherText1)).getText().toString());
+        editor.putString("other2", ((TextView) findViewById(R.id.otherText2)).getText().toString());
+        editor.putString("other3", ((TextView) findViewById(R.id.otherText3)).getText().toString());
+
+        editor.commit();
+        editor.apply();
+    }
+
+    private void loadData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("savePreference", MODE_PRIVATE);
+
+        if (sharedPreferences.getString("tank1", "") != "") {
+            for(int i = 0; i < tankCount; i++) {
+                String tankGson = sharedPreferences.getString("tank" + i, "");
+                Tank loadTank = gson.fromJson(tankGson, Tank.class);
+
+                tanks.add(loadTank);
+            }
+
+            setupText();
+        }
+
+        if(sharedPreferences.getString("startCounter", "") != "") {
+            Tank.startCounter = Double.parseDouble(sharedPreferences.getString("startCounter", ""));
+            setupText();
+        }
+
+        if(sharedPreferences.getString("endCounter", "") != "") {
+            Tank.endCounter = Double.parseDouble(sharedPreferences.getString("endCounter", ""));
+            setupText();
+        }
+
+        ((TextView) findViewById(R.id.otherText1)).setText(sharedPreferences.getString("other1", ""));
+        ((TextView) findViewById(R.id.otherText2)).setText(sharedPreferences.getString("other2", ""));
+        ((TextView) findViewById(R.id.otherText3)).setText(sharedPreferences.getString("other3", ""));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        saveData();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveData();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        saveData();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        saveData();
     }
 
     private void setupResetButton() {
@@ -104,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 PopupMenu popupMenu = new PopupMenu(MainActivity.this, view);
                 popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
-
                 Menu popupMenuMenu = popupMenu.getMenu();
 
                 popupMenuItems.clear();
@@ -113,14 +172,10 @@ public class MainActivity extends AppCompatActivity {
                     popupMenuItems.add(popupMenuMenu.getItem(i));
                 }
 
-                if (!isLoadedData)
-                    for(int i = 0; i < popupMenuMenu.size(); i++) {
-                        tanks.add(new Tank());
-                    }
+                updateTimer();
 
                 setupTank();
                 tanks.get(currentTankIndex).setupInstances();
-
                 setupText();
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -143,31 +198,31 @@ public class MainActivity extends AppCompatActivity {
     private void setupTank() {
         tanks.get(currentTankIndex).name = (((EditText) findViewById(R.id.reservoirName)).getText().toString().isEmpty()) ? "резервуар" : ((EditText) findViewById(R.id.reservoirName)).getText().toString();
 
-        tanks.get(currentTankIndex).startLevel = Float.valueOf((((TextView) findViewById(R.id.startLevel)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.startLevel)).getText().toString());
-        tanks.get(currentTankIndex).endLevel = Float.valueOf((((TextView) findViewById(R.id.endLevel)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.endLevel)).getText().toString());
+        tanks.get(currentTankIndex).startLevel = Double.parseDouble((((TextView) findViewById(R.id.startLevel)).getText().toString().isEmpty()) ? "0d" : ((TextView) findViewById(R.id.startLevel)).getText().toString());
+        tanks.get(currentTankIndex).endLevel = Double.parseDouble((((TextView) findViewById(R.id.endLevel)).getText().toString().isEmpty()) ? "0d" : ((TextView) findViewById(R.id.endLevel)).getText().toString());
 
-        tanks.get(currentTankIndex).startVolume = Float.valueOf((((TextView) findViewById(R.id.startVolume)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.startVolume)).getText().toString());
-        tanks.get(currentTankIndex).endVolume = Float.valueOf((((TextView) findViewById(R.id.endVolume)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.endVolume)).getText().toString());
+        tanks.get(currentTankIndex).startVolume = Double.parseDouble((((TextView) findViewById(R.id.startVolume)).getText().toString().isEmpty()) ? "0d" : ((TextView) findViewById(R.id.startVolume)).getText().toString());
+        tanks.get(currentTankIndex).endVolume = Double.parseDouble((((TextView) findViewById(R.id.endVolume)).getText().toString().isEmpty()) ? "0d" : ((TextView) findViewById(R.id.endVolume)).getText().toString());
 
-        tanks.get(currentTankIndex).startWater = Float.valueOf((((TextView) findViewById(R.id.startWaterVolume)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.startWaterVolume)).getText().toString());
-        tanks.get(currentTankIndex).endWater = Float.valueOf((((TextView) findViewById(R.id.endWaterVolume)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.endWaterVolume)).getText().toString());
+        tanks.get(currentTankIndex).startWater = Double.parseDouble((((TextView) findViewById(R.id.startWaterVolume)).getText().toString().isEmpty()) ? "0d" : ((TextView) findViewById(R.id.startWaterVolume)).getText().toString());
+        tanks.get(currentTankIndex).endWater = Double.parseDouble((((TextView) findViewById(R.id.endWaterVolume)).getText().toString().isEmpty()) ? "0d" : ((TextView) findViewById(R.id.endWaterVolume)).getText().toString());
 
-        tanks.get(currentTankIndex).startFreeDensityCounter = Float.valueOf((((TextView) findViewById(R.id.startFreeDensityCounter)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.startFreeDensityCounter)).getText().toString());
-        tanks.get(currentTankIndex).endFreeDensityCounter = Float.valueOf((((TextView) findViewById(R.id.endFreeDensityCounter)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.endFreeDensityCounter)).getText().toString());
+        tanks.get(currentTankIndex).startFreeDensityCounter = Double.parseDouble((((TextView) findViewById(R.id.startFreeDensityCounter)).getText().toString().isEmpty()) ? "0d" : ((TextView) findViewById(R.id.startFreeDensityCounter)).getText().toString());
+        tanks.get(currentTankIndex).endFreeDensityCounter = Double.parseDouble((((TextView) findViewById(R.id.endFreeDensityCounter)).getText().toString().isEmpty()) ? "0d" : ((TextView) findViewById(R.id.endFreeDensityCounter)).getText().toString());
 
-        tanks.get(currentTankIndex).startFreeDensityCounterValue = Float.valueOf((((TextView) findViewById(R.id.startFreeDensityCounterValue)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.startFreeDensityCounterValue)).getText().toString());
-        tanks.get(currentTankIndex).endFreeDensityCounterValue = Float.valueOf((((TextView) findViewById(R.id.endFreeDensityCounterValue)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.endFreeDensityCounterValue)).getText().toString());
+        tanks.get(currentTankIndex).startFreeDensityCounterValue = Double.parseDouble((((TextView) findViewById(R.id.startFreeDensityCounterValue)).getText().toString().isEmpty()) ? "0d" : ((TextView) findViewById(R.id.startFreeDensityCounterValue)).getText().toString());
+        tanks.get(currentTankIndex).endFreeDensityCounterValue = Double.parseDouble((((TextView) findViewById(R.id.endFreeDensityCounterValue)).getText().toString().isEmpty()) ? "0d" : ((TextView) findViewById(R.id.endFreeDensityCounterValue)).getText().toString());
 
-        tanks.get(currentTankIndex).start15DensityCounterValue = Float.valueOf((((TextView) findViewById(R.id.start15DensityCounterValue)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.start15DensityCounterValue)).getText().toString());
-        tanks.get(currentTankIndex).end15DensityCounterValue = Float.valueOf((((TextView) findViewById(R.id.end15DensityCounterValue)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.end15DensityCounterValue)).getText().toString());
+        tanks.get(currentTankIndex).start15DensityCounterValue = Double.parseDouble((((TextView) findViewById(R.id.start15DensityCounterValue)).getText().toString().isEmpty()) ? "0d" : ((TextView) findViewById(R.id.start15DensityCounterValue)).getText().toString());
+        tanks.get(currentTankIndex).end15DensityCounterValue = Double.parseDouble((((TextView) findViewById(R.id.end15DensityCounterValue)).getText().toString().isEmpty()) ? "0d" : ((TextView) findViewById(R.id.end15DensityCounterValue)).getText().toString());
 
-        tanks.get(currentTankIndex).start20DensityCounterValue = Float.valueOf((((TextView) findViewById(R.id.start20DensityCounterValue)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.start20DensityCounterValue)).getText().toString());
-        tanks.get(currentTankIndex).end20DensityCounterValue = Float.valueOf((((TextView) findViewById(R.id.end20DensityCounterValue)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.end20DensityCounterValue)).getText().toString());
+        tanks.get(currentTankIndex).start20DensityCounterValue = Double.parseDouble((((TextView) findViewById(R.id.start20DensityCounterValue)).getText().toString().isEmpty()) ? "0d" : ((TextView) findViewById(R.id.start20DensityCounterValue)).getText().toString());
+        tanks.get(currentTankIndex).end20DensityCounterValue = Double.parseDouble((((TextView) findViewById(R.id.end20DensityCounterValue)).getText().toString().isEmpty()) ? "0d" : ((TextView) findViewById(R.id.end20DensityCounterValue)).getText().toString());
 
-        Tank.startCounter = Float.valueOf((((TextView) findViewById(R.id.startCounter)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.startCounter)).getText().toString());
-        Tank.endCounter = Float.valueOf((((TextView) findViewById(R.id.endCounter)).getText().toString().isEmpty()) ? "0f" : ((TextView) findViewById(R.id.endCounter)).getText().toString());
+        Tank.startCounter = Double.parseDouble((((TextView) findViewById(R.id.startCounter)).getText().toString().isEmpty()) ? "0d" : ((TextView) findViewById(R.id.startCounter)).getText().toString());
+        Tank.endCounter = Double.parseDouble((((TextView) findViewById(R.id.endCounter)).getText().toString().isEmpty()) ? "0d" : ((TextView) findViewById(R.id.endCounter)).getText().toString());
 
-        float result = 0;
+        double result = 0;
 
         for(Tank tank : tanks)
             result += tank.reception;
@@ -181,45 +236,45 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < popupMenuItems.size(); i++)
             popupMenuItems.get(i).setTitle(tanks.get(i).name);
 
-        ((EditText) findViewById(R.id.startLevel)).setText(String.valueOf(tanks.get(currentTankIndex).startLevel));
-        ((EditText) findViewById(R.id.endLevel)).setText(String.valueOf(tanks.get(currentTankIndex).endLevel));
+        ((EditText) findViewById(R.id.startLevel)).setText(String.format(Locale.ROOT, "%.1f", tanks.get(currentTankIndex).startLevel));
+        ((EditText) findViewById(R.id.endLevel)).setText(String.format(Locale.ROOT, "%.1f", tanks.get(currentTankIndex).endLevel));
 
-        ((EditText) findViewById(R.id.startVolume)).setText(String.valueOf(tanks.get(currentTankIndex).startVolume));
-        ((EditText) findViewById(R.id.endVolume)).setText(String.valueOf(tanks.get(currentTankIndex).endVolume));
+        ((EditText) findViewById(R.id.startVolume)).setText(String.format(Locale.ROOT, "%.3f", tanks.get(currentTankIndex).startVolume));
+        ((EditText) findViewById(R.id.endVolume)).setText(String.format(Locale.ROOT, "%.3f", tanks.get(currentTankIndex).endVolume));
 
-        ((EditText) findViewById(R.id.startWaterVolume)).setText(String.valueOf(tanks.get(currentTankIndex).startWater));
-        ((EditText) findViewById(R.id.endWaterVolume)).setText(String.valueOf(tanks.get(currentTankIndex).endWater));
+        ((EditText) findViewById(R.id.startWaterVolume)).setText(String.format(Locale.ROOT, "%.3f", tanks.get(currentTankIndex).startWater));
+        ((EditText) findViewById(R.id.endWaterVolume)).setText(String.format(Locale.ROOT, "%.3f", tanks.get(currentTankIndex).endWater));
 
-        ((TextView) findViewById(R.id.startVolumeWithoutWater)).setText(String.format("%.3f", tanks.get(currentTankIndex).startVolumeWithoutWater));
-        ((TextView) findViewById(R.id.endVolumeWithoutWater)).setText(String.format("%.3f", tanks.get(currentTankIndex).endVolumeWithoutWater));
+        ((TextView) findViewById(R.id.startVolumeWithoutWater)).setText(String.format(Locale.ROOT, "%.3f", tanks.get(currentTankIndex).startVolumeWithoutWater));
+        ((TextView) findViewById(R.id.endVolumeWithoutWater)).setText(String.format(Locale.ROOT, "%.3f", tanks.get(currentTankIndex).endVolumeWithoutWater));
 
-        ((EditText) findViewById(R.id.startFreeDensityCounter)).setText(String.valueOf(tanks.get(currentTankIndex).startFreeDensityCounter));
-        ((EditText) findViewById(R.id.endFreeDensityCounter)).setText(String.valueOf(tanks.get(currentTankIndex).endFreeDensityCounter));
+        ((EditText) findViewById(R.id.startFreeDensityCounter)).setText(String.format(Locale.ROOT, "%.1f", tanks.get(currentTankIndex).startFreeDensityCounter));
+        ((EditText) findViewById(R.id.endFreeDensityCounter)).setText(String.format(Locale.ROOT, "%.1f", tanks.get(currentTankIndex).endFreeDensityCounter));
 
-        ((EditText) findViewById(R.id.startFreeDensityCounterValue)).setText(String.valueOf(tanks.get(currentTankIndex).startFreeDensityCounterValue));
-        ((EditText) findViewById(R.id.endFreeDensityCounterValue)).setText(String.valueOf(tanks.get(currentTankIndex).endFreeDensityCounterValue));
+        ((EditText) findViewById(R.id.startFreeDensityCounterValue)).setText(String.format(Locale.ROOT, "%.2f", tanks.get(currentTankIndex).startFreeDensityCounterValue));
+        ((EditText) findViewById(R.id.endFreeDensityCounterValue)).setText(String.format(Locale.ROOT, "%.2f", tanks.get(currentTankIndex).endFreeDensityCounterValue));
 
-        ((EditText) findViewById(R.id.start15DensityCounterValue)).setText(String.valueOf(tanks.get(currentTankIndex).start15DensityCounterValue));
-        ((EditText) findViewById(R.id.end15DensityCounterValue)).setText(String.valueOf(tanks.get(currentTankIndex).end15DensityCounterValue));
+        ((EditText) findViewById(R.id.start15DensityCounterValue)).setText(String.format(Locale.ROOT, "%.2f", tanks.get(currentTankIndex).start15DensityCounterValue));
+        ((EditText) findViewById(R.id.end15DensityCounterValue)).setText(String.format(Locale.ROOT, "%.2f", tanks.get(currentTankIndex).end15DensityCounterValue));
 
-        ((EditText) findViewById(R.id.start20DensityCounterValue)).setText(String.valueOf(tanks.get(currentTankIndex).start20DensityCounterValue));
-        ((EditText) findViewById(R.id.end20DensityCounterValue)).setText(String.valueOf(tanks.get(currentTankIndex).end20DensityCounterValue));
+        ((EditText) findViewById(R.id.start20DensityCounterValue)).setText(String.format(Locale.ROOT, "%.2f", tanks.get(currentTankIndex).start20DensityCounterValue));
+        ((EditText) findViewById(R.id.end20DensityCounterValue)).setText(String.format(Locale.ROOT, "%.2f", tanks.get(currentTankIndex).end20DensityCounterValue));
 
-        ((TextView) findViewById(R.id.startTons)).setText(String.format("%.3f", tanks.get(currentTankIndex).startTons));
+        ((TextView) findViewById(R.id.startTons)).setText(String.format(Locale.ROOT, "%.3f", tanks.get(currentTankIndex).startTons));
 
-        ((TextView) findViewById(R.id.endTons)).setText(String.format("%.3f", tanks.get(currentTankIndex).endTons));
+        ((TextView) findViewById(R.id.endTons)).setText(String.format(Locale.ROOT, "%.3f", tanks.get(currentTankIndex).endTons));
 
-        ((TextView) findViewById(R.id.reception)).setText(String.format("%.3f", tanks.get(currentTankIndex).reception));
+        ((TextView) findViewById(R.id.reception)).setText(String.format(Locale.ROOT, "%.3f", tanks.get(currentTankIndex).reception));
 
-        ((EditText) findViewById(R.id.startCounter)).setText(String.valueOf(Tank.startCounter));
-        ((EditText) findViewById(R.id.endCounter)).setText(String.valueOf(Tank.endCounter));
+        ((EditText) findViewById(R.id.startCounter)).setText(String.format(Locale.ROOT, "%.3f", Tank.startCounter));
+        ((EditText) findViewById(R.id.endCounter)).setText(String.format(Locale.ROOT, "%.3f", Tank.endCounter));
 
-        ((TextView)findViewById(R.id.receptionByCounter)).setText(String.format("%.3f", Tank.endCounter - Tank.startCounter));
-        ((TextView)findViewById(R.id.together)).setText(String.format("%.3f", Tank.together));
+        ((TextView)findViewById(R.id.receptionByCounter)).setText(String.format(Locale.ROOT, "%.3f", Tank.endCounter - Tank.startCounter));
+        ((TextView)findViewById(R.id.together)).setText(String.format(Locale.ROOT, "%.3f", Tank.together));
 
-        ((TextView)findViewById(R.id.difference)).setText(String.format("%.3f", Tank.together - (Tank.endCounter - Tank.startCounter)));
+        ((TextView)findViewById(R.id.difference)).setText(String.format(Locale.ROOT, "%.3f", Tank.together - (Tank.endCounter - Tank.startCounter)));
 
-        ((TextView)findViewById(R.id.percents)).setText(String.format("%.2f", (Tank.together - (Tank.endCounter - Tank.startCounter)) / (Tank.endCounter - Tank.startCounter) * 100) + "%");
+        ((TextView)findViewById(R.id.percents)).setText(String.format(Locale.ROOT, "%.2f", (Tank.together - (Tank.endCounter - Tank.startCounter)) / (Tank.endCounter - Tank.startCounter) * 100) + "%");
     }
 
     private void updateTimer() {

@@ -3,6 +3,7 @@ package com.example.calculations;
 import android.os.Parcelable;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 public class Tank implements Serializable {
 
@@ -50,10 +51,10 @@ public class Tank implements Serializable {
         this.startVolumeWithoutWater = this.startVolume - this.startWater;
         this.endVolumeWithoutWater = this.endVolume - this.endWater;
 
-        this.startTons = this.startVolumeWithoutWater * this.startFreeDensityCounterValue / 1000;
-        this.endTons = this.endVolumeWithoutWater * this.endFreeDensityCounterValue / 1000;
+        this.startTons = (this.startVolumeWithoutWater * this.startFreeDensityCounterValue) / 1000;
+        this.endTons = (this.endVolumeWithoutWater * this.endFreeDensityCounterValue) / 1000;
 
-        this.reception = this.endTons - this.startTons;
+        this.reception = Double.valueOf(String.format(Locale.ROOT, "%.3f", this.endTons)) - Double.valueOf(String.format(Locale.ROOT, "%.3f", this.startTons));
     }
 
     public void resetInstances() {

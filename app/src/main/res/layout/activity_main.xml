@@ -628,61 +628,30 @@
 
             </TableRow>
 
-            <TableRow
-                android:layout_marginTop="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:padding="5dp">
+            <EditText
+                android:id="@+id/otherText1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="25dp"
+                android:inputType="text"
+                android:textSize="20sp" />
 
-                <EditText
-                    android:id="@+id/otherText1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:inputType="text"
-                    android:textSize="20sp" />
+            <EditText
+                android:id="@+id/otherText2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="text"
+                android:textSize="20sp" />
 
-
-            </TableRow>
-
-            <TableRow
-                android:layout_marginTop="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:padding="5dp">
-
-                <EditText
-                    android:id="@+id/otherText2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:inputType="text"
-                    android:textSize="20sp" />
-
-
-            </TableRow>
-
-            <TableRow
-                android:layout_marginTop="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:padding="5dp">
-
-                <EditText
-                    android:id="@+id/otherText3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:inputType="text"
-                    android:textSize="20sp" />
-
-
-            </TableRow>
+            <EditText
+                android:id="@+id/otherText3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="text"
+                android:textSize="20sp" />
 
         </TableLayout>
 
